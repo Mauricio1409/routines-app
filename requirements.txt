@@ -1,0 +1,9 @@
+Django==5.2.9
+djangorestframework==3.16.1
+uvicorn==0.38.0
+channels==4.3.2
+mysqlclient==2.2.7
+django-environ==0.12.0
+djoser==2.3.3
+djangorestframework-simplejwt==5.5.1
+drf-yasg==1.21.11

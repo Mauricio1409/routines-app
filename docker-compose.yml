@@ -1,0 +1,43 @@
+services:
+  training_db:
+    image: mysql:8.0
+    container_name: training_db
+    environment:
+      MYSQL_ROOT_PASSWORD: training_pass
+      MYSQL_DATABASE: TrainingDB
+    ports:
+      - "3310:3306"
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - training_network
+
+  api:
+    build: .
+    container_name: training_api
+    command: uvicorn core.asgi:application --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      training_db:
+        condition: service_healthy
+    networks:
+      - training_network
+
+volumes:
+  db_data:
+
+networks:
+  training_network:
+    driver: bridge
