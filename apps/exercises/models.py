@@ -1,9 +1,7 @@
 from django.db import models
 import uuid
 
-# Create your models here.
-
-class Exercises(models.Model):
+class Exercise(models.Model):
     class MuscleGroups(models.TextChoices):
         CHEST = 'CHEST', 'Pecho'
         BACK = 'BACK', 'Espalda'

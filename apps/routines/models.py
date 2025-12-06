@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from apps.exercises.models import Exercises
+from apps.exercises.models import Exercise
 
 
 User = get_user_model()
@@ -59,7 +59,7 @@ class WorkoutExercise(models.Model):
         related_name='exercises'
     )
     exercise = models.ForeignKey(
-        Exercises,
+        Exercise,
         on_delete=models.CASCADE
     )
     order = models.PositiveIntegerField(default=1, verbose_name="Orden en la sesión")

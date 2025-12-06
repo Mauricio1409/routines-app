@@ -1,0 +1,1340 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Training API - Complete Collection",
+		"description": "Colección completa de endpoints para la API de entrenamiento",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"usuario@example.com\",\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Pérez\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/users/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								""
+							]
+						},
+						"description": "Registrar un nuevo usuario en el sistema. NOTA: USER_CREATE_PASSWORD_RETYPE está en False, no necesitas enviar re_password"
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Get JWT Token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"usuario@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/jwt/create/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"jwt",
+								"create",
+								""
+							]
+						},
+						"description": "Obtener token JWT para autenticación. Guarda el access token para usarlo en las demás peticiones."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/jwt/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"jwt",
+								"refresh",
+								""
+							]
+						},
+						"description": "Refrescar el access token usando el refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/users/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"me",
+								""
+							]
+						},
+						"description": "Obtener información del usuario autenticado"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Current User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Pérez Actualizado\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/users/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"me",
+								""
+							]
+						},
+						"description": "Actualizar información del usuario autenticado"
+					},
+					"response": []
+				},
+				{
+					"name": "Set Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"new_password\": \"newpassword123\",\n    \"current_password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/users/set_password/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"set_password",
+								""
+							]
+						},
+						"description": "Cambiar la contraseña del usuario autenticado"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Body Metrics",
+			"item": [
+				{
+					"name": "List Metrics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/metrics/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"metrics",
+								""
+							]
+						},
+						"description": "Listar todas las métricas corporales del usuario autenticado"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Metric",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"weight\": 75.5,\n    \"height\": 175.0,\n    \"body_fat_percentage\": 15.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/metrics/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"metrics",
+								""
+							]
+						},
+						"description": "Crear una nueva métrica corporal"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Metric Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/metrics/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"metrics",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Obtener detalle de una métrica específica"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Metric",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"weight\": 76.0,\n    \"height\": 175.0,\n    \"body_fat_percentage\": 15.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/metrics/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"metrics",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualizar una métrica existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Metric",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"body_fat_percentage\": 14.8\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/metrics/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"metrics",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualización parcial de una métrica"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Metric",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/metrics/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"metrics",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Eliminar una métrica"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercises",
+			"item": [
+				{
+					"name": "List Exercises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/exercises/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"exercises",
+								""
+							]
+						},
+						"description": "Listar todos los ejercicios del catálogo"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Exercise",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Press de Banca\",\n    \"description\": \"Ejercicio compuesto para pecho\",\n    \"video_url\": \"https://www.youtube.com/watch?v=example\",\n    \"muscle_group\": \"CHEST\",\n    \"equipment_type\": \"BARBELL\",\n    \"exercise_type\": \"STRENGTH\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/exercises/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"exercises",
+								""
+							]
+						},
+						"description": "Crear un nuevo ejercicio en el catálogo"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercise Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						},
+						"description": "Obtener detalle de un ejercicio específico"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exercise",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Press de Banca Plano\",\n    \"description\": \"Ejercicio compuesto para pecho superior\",\n    \"video_url\": \"https://www.youtube.com/watch?v=example\",\n    \"muscle_group\": \"CHEST\",\n    \"equipment_type\": \"BARBELL\",\n    \"exercise_type\": \"STRENGTH\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						},
+						"description": "Actualizar un ejercicio existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Exercise",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Ejercicio compuesto principal para desarrollo de pecho\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						},
+						"description": "Actualización parcial de un ejercicio"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Exercise",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						},
+						"description": "Eliminar un ejercicio del catálogo"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Routines",
+			"item": [
+				{
+					"name": "List Routines",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/routines/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"routines",
+								""
+							]
+						},
+						"description": "Listar todas las rutinas del usuario autenticado"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Routine",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Rutina de Hipertrofia\",\n    \"description\": \"Rutina de 4 días enfocada en hipertrofia muscular\",\n    \"goal\": \"HYPERTROPHY\",\n    \"start_date\": \"2025-01-10\",\n    \"end_date\": \"2025-04-10\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/routines/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"routines",
+								""
+							]
+						},
+						"description": "Crear una nueva rutina de entrenamiento"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Routine Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/routines/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"routines",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Obtener detalle de una rutina con todos sus workouts"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Routine",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Rutina de Hipertrofia Avanzada\",\n    \"description\": \"Rutina de 5 días enfocada en hipertrofia muscular\",\n    \"goal\": \"HYPERTROPHY\",\n    \"start_date\": \"2025-01-10\",\n    \"end_date\": \"2025-04-10\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/routines/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"routines",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualizar una rutina existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Routine",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"end_date\": \"2025-05-10\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/routines/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"routines",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualización parcial de una rutina"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Routine",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/routines/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"routines",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Eliminar una rutina"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Workouts",
+			"item": [
+				{
+					"name": "List Workouts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workouts/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workouts",
+								""
+							]
+						},
+						"description": "Listar todos los entrenamientos del usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Workout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"routines\": 1,\n    \"name\": \"Día de Pecho y Tríceps\",\n    \"day_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workouts/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workouts",
+								""
+							]
+						},
+						"description": "Crear un nuevo entrenamiento dentro de una rutina"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Workout Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workouts/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workouts",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Obtener detalle de un entrenamiento con todos sus ejercicios"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Workout",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"routines\": 1,\n    \"name\": \"Día de Pecho, Tríceps y Hombros\",\n    \"day_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workouts/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workouts",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualizar un entrenamiento existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Workout",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Día de Empuje\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workouts/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workouts",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualización parcial de un entrenamiento"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Workout",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workouts/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workouts",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Eliminar un entrenamiento"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Workout Exercises",
+			"item": [
+				{
+					"name": "List Workout Exercises",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workout-exercises/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workout-exercises",
+								""
+							]
+						},
+						"description": "Listar todos los ejercicios dentro de workouts del usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Workout Exercise",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"workout\": 1,\n    \"exercise\": \"uuid-del-ejercicio\",\n    \"order\": 1,\n    \"sets\": 4,\n    \"reps_min\": 8,\n    \"reps_max\": 12,\n    \"rest_time\": 90,\n    \"notes\": \"Bajar lento en la fase excéntrica\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workout-exercises/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workout-exercises",
+								""
+							]
+						},
+						"description": "Agregar un ejercicio a un entrenamiento"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Workout Exercise Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workout-exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workout-exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Obtener detalle de un ejercicio dentro de un workout"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Workout Exercise",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"workout\": 1,\n    \"exercise\": \"uuid-del-ejercicio\",\n    \"order\": 1,\n    \"sets\": 5,\n    \"reps_min\": 6,\n    \"reps_max\": 10,\n    \"rest_time\": 120,\n    \"notes\": \"Bajar lento, explosivo arriba\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workout-exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workout-exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualizar un ejercicio dentro de un workout"
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Workout Exercise",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sets\": 5,\n    \"rest_time\": 120\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workout-exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workout-exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualización parcial de un ejercicio en un workout"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Workout Exercise",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workout-exercises/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"workout-exercises",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Eliminar un ejercicio de un workout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Training Sessions",
+			"item": [
+				{
+					"name": "Create Training Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"workout\": 1,\n    \"duration\": \"01:30:00\",\n    \"notes\": \"Muy buena sesión, me sentí fuerte\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sessions/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sessions",
+								""
+							]
+						},
+						"description": "Crear una nueva sesión de entrenamiento"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Training Session Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sessions/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sessions",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Obtener detalle de una sesión de entrenamiento con todos sus logs"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Training Session",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"workout\": 1,\n    \"duration\": \"01:45:00\",\n    \"notes\": \"Excelente sesión, agregué ejercicio extra\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sessions/:id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sessions",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualizar una sesión de entrenamiento"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+

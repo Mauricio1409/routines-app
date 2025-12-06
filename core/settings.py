@@ -25,7 +25,6 @@ THIRD_PARTY_APPS = [
     'channels',
     'rest_framework_simplejwt',
     'djoser',
-    'drf_yasg',
 ]
 
 LOCAL_APPS = [
@@ -103,10 +102,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES' : {
-        'rest_framework.permissions.AllowAny',
-    },
-    'EXCEPTION_HANDLER': 'core.exception_handler.custom_exception_handler',
+    #'EXCEPTION_HANDLER': 'core.exception_handler.custom_exception_handler',
 }
 
 SIMPLE_JWT = {
@@ -117,15 +113,17 @@ SIMPLE_JWT = {
 
 DJOSER = {
     "LOGIN_FIELD": "email",
-
-    "USER_CREATE_PASSWORD_RETYPE": True,
+    "USER_CREATE_PASSWORD_RETYPE": False,
     "SEND_ACTIVATION_EMAIL": False,
     "SEND_CONFIRMATION_EMAIL": False,
-
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "username/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "activate/{uid}/{token}",
     "SERIALIZERS": {
         "user_create": "apps.users.serializers.UserCreateSerializer",
         "user": "apps.users.serializers.UserSerializer",
         "current_user": "apps.users.serializers.UserSerializer",
+        "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }
 

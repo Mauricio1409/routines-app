@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from apps.exercises.models import Exercises
+from apps.exercises.models import Exercise
 from apps.routines.models import Workout
 
 
@@ -54,7 +54,7 @@ class ExerciseLog(models.Model):
     )
 
     exercise = models.ForeignKey(
-        Exercises,
+        Exercise,
         on_delete=models.PROTECT
     )
 

@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from apps.exercises.views.exercises_views import ExercisesViewSet
+from apps.exercises.views.exercise_views import ExerciseViewSet
 
-router = DefaultRouter()
-router.register(r'exercises', ExercisesViewSet, basename='exercises')
+exercises_router = DefaultRouter()
+exercises_router.register(r'exercises', ExerciseViewSet, basename='exercises')
