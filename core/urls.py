@@ -12,8 +12,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Autenticación con Djoser
-    path('api/auth/', include('djoser.urls')),
-    path('api/auth/', include('djoser.urls.jwt')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
 
     # APIs de las apps
     path('api/', include(exercises_router.urls)),
