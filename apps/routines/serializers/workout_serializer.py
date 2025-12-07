@@ -1,3 +1,5 @@
+from time import daylight
+
 from rest_framework.serializers import ModelSerializer
 from apps.routines.models import Workout, WorkoutExercise
 from rest_framework import serializers
@@ -8,17 +10,29 @@ class WorkoutSerialzier(ModelSerializer):
         model = Workout
         fields = (
             'id',
-            'routines',
+            'routine',
             'name',
             'day_order',
         )
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'day_order')
 
     def validate_day_order(self, value):
         if not (1 <= value <= 7):
             raise serializers.ValidationError("El día de la semana debe estar entre 1 y 7.")
         return value
 
+class WorkoutUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Workout
+        fields = (
+            'name',
+            'day_order',
+        )
+
+    def validate_day_order(self, value):
+        if not (1 <= value <= 7):
+            raise serializers.ValidationError("El día de la semana debe estar entre 1 y 7.")
+        return value
 
 
 class WorkoutExerciseSerializer(ModelSerializer):
@@ -54,7 +68,7 @@ class WorkOutDetailSerializer(ModelSerializer):
         model = Workout
         fields = (
             'id',
-            'routines',
+            'routine',
             'name',
             'day_order',
             'exercises',

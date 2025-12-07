@@ -1,13 +1,15 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from apps.exercises.services.exercise_service import ExerciseService
 
 class ExerciseViewSet(ViewSet):
+    permission_classes = [IsAuthenticated]
     service = ExerciseService()
 
     def list(self, request):
-        exercises = self.service.get_all()
+        exercises = self.service.get_all(request.query_params)
         return Response(exercises, status=status.HTTP_200_OK)
 
     def create(self, request):

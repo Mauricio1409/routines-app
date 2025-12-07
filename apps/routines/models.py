@@ -36,7 +36,7 @@ class Routine(models.Model):
 
 
 class Workout(models.Model):
-    routines = models.ForeignKey(Routine, on_delete=models.CASCADE, related_name='workouts')
+    routine = models.ForeignKey(Routine, on_delete=models.CASCADE, related_name='workouts')
     name = models.CharField(max_length=100, verbose_name="Nombre del Entrenamiento")
     day_order = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(7)],

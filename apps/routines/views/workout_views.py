@@ -1,50 +1,34 @@
-from rest_framework.exceptions import PermissionDenied
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
-from apps.routines.models import Workout, WorkoutExercise
-from apps.routines.serializers.workout_serializer import WorkoutSerialzier, WorkoutExerciseSerializer
+from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
 
-class WorkOutViewSet(ModelViewSet):
+from apps.routines.services.workout_service import WorkOutService
+
+
+class WorkOutViewSet(ViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = WorkoutSerialzier
+    service = WorkOutService()
 
-    def get_queryset(self):
-        user = self.request.user
-        # OPTIMIZACIÓN 1: 'routine__user' (singular) porque Workout tiene una FK a Routine
-        # OPTIMIZACIÓN 2: prefetch_related para traer los ejercicios hijos y evitar problema N+1
-        # OPTIMIZACIÓN 3: select_related para traer los datos de la rutina padre en la misma query
-        return ((Workout.objects.filter(routines__user=user)
-                .select_related('routines'))
-                .prefetch_related('exercises__exercise')) # Asumiendo que 'exercises' es el related_name en WorkoutExercise
+    def retrieve(self, request, pk=None):
+        workout = self.service.get_by_id(pk=pk, user=request.user)
+        return Response(workout, status=status.HTTP_200_OK)
+
+    def create(self, request, pk=None):
+        workout = self.service.create(data=request.data, user=request.user)
+        return Response(workout, status=status.HTTP_201_CREATED)
+
+    def update(self, request, pk=None):
+        workout = self.service.update(pk=pk, data=request.data, user=request.user)
+        return Response(workout, status=status.HTTP_200_OK)
+
+    def destroy(self, request, pk=None):
+        self.service.delete(pk=pk, user=request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            from apps.routines.serializers.workout_serializer import WorkOutDetailSerializer
-            return WorkOutDetailSerializer
-        return WorkoutSerialzier
 
 
-    def perform_create(self, serializer):
-        user = self.request.user
-        routine = serializer.validated_data.get('routines')
-        if routine.user != user:
-            raise PermissionDenied("No tienes permiso para agregar un workout a esta rutina.")
-        serializer.save()
 
-class WorkoutExerciseViewSet(ModelViewSet):
+class WorkoutExerciseViewSet(ViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class =  WorkoutExerciseSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        # OPTIMIZACIÓN 4: select_related para traer el workout y el ejercicio base (catalogo)
-        return WorkoutExercise.objects.filter(workout__routines__user=user)\
-            .select_related('workout', 'exercise')
-
-    def perform_create(self, serializer):
-        user = self.request.user
-        workout = serializer.validated_data.get('workout')
-        if workout.routines.user != user:
-            raise PermissionDenied("No tienes permiso para agregar un ejercicio a este workout.")
-        serializer.save()

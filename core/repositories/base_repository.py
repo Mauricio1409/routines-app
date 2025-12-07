@@ -1,9 +1,10 @@
-
 class BaseRepository:
     def __init__(self, model):
         self.model = model
 
-    def get_all(self):
+    def get_all(self, filters=None):
+        if filters:
+            return self.model.objects.filter(**filters)
         return self.model.objects.all()
 
     def get_by_id(self, pk):

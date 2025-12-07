@@ -6,8 +6,23 @@ class ExerciseService:
     def __init__(self):
         self.repository = ExerciseRepository()
 
-    def get_all(self):
-        exercises = self.repository.get_all()
+    def get_all(self, query_params=None):
+        param_map = {
+            "name": "name__icontains",
+            "muscle_group": "muscle_group__iexact",
+            "equipment_type": "equipment_type__iexact",
+            "exercise_type": "exercise_type__iexact",
+        }
+
+        filtros = {}
+
+        if query_params:
+            for param, field in param_map.items():
+                value = query_params.get(param)
+                if value:
+                    filtros[field] = value
+
+        exercises = self.repository.get_all(filters=filtros if filtros else None)
         return ExercisesSerializer(exercises, many=True).data
 
     def get_by_id(self, pk):
