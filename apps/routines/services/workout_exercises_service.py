@@ -64,6 +64,9 @@ class WorkOutExercisesService:
             raise Exception("Exercise not found in this workout.")
 
         self.workout_exercises_repository.delete(workout_exercise)
+        
+    def exists_exercise_in_workout(self, workout, exercise):
+        return self.workout_exercises_repository.exists_exercise_in_workout(workout, exercise)
 
 
 

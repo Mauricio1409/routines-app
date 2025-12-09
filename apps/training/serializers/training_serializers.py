@@ -14,7 +14,31 @@ class ExerciseLogSerializer(ModelSerializer):
             'reps',
             'rpe',
         )
-        read_only_fields = ('id', 'workout_session')
+        read_only_fields = ('id', 'session')
+        
+class ExerciseLogUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = ExerciseLog
+        fields = (
+            'set_number',
+            'weight_kg',
+            'reps',
+            'rpe',
+        )
+        
+class ExerciseLogDetailSerializer(ModelSerializer):
+    exercise = serializers.StringRelatedField()
+    class Meta:
+        model = ExerciseLog
+        fields = (
+            'id',
+            'session',
+            'exercise',
+            'set_number',
+            'weight_kg',
+            'reps',
+            'rpe',
+        )
 
 class WorkOutSessionSerializer(ModelSerializer):
     class Meta:
@@ -49,4 +73,12 @@ class WorkOutSessionDetailSerializer(ModelSerializer):
             'logs'
         )
         read_only_fields = ('id', 'user', 'date')
+        
+class WorkOutSessionUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = WorkoutSession
+        fields = (
+            'duration',
+            'notes',
+        )
 

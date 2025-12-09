@@ -10,3 +10,6 @@ class WorkOutExercisesRepository(BaseRepository):
 
     def get_workout_exercise_by_id(self, workout, workout_exercise_id):
         return workout.exercises.filter(id=workout_exercise_id).first()
+    
+    def exists_exercise_in_workout(self, workout, exercise):
+        return self.model.objects.filter(workout=workout, exercise=exercise).exists()

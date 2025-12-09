@@ -1,81 +1,56 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from apps.training.models import WorkoutSession
-from apps.training.serializers.training_serializers import WorkOutSessionSerializer, WorkOutSessionDetailSerializer
+from ..services.workout_session import WorkOutSessionService
+from rest_framework.decorators import action
+from ..services.exercise_log_service import ExerciseLogService
 
 
 
 class WorkOutSessionView(ViewSet):
     permission_classes = (IsAuthenticated,)
+    service = WorkOutSessionService()
+    exercise_log_service = ExerciseLogService()
+    
+    def list(self, request):
+        sessions = self.service.get_sessions_by_user(request.user)
+        return Response(sessions, status=200)
 
     def retrieve(self, request, pk=None):
-        try:
-
-            workout = (
-                WorkoutSession.objects
-                .prefetch_related("logs__exercise")
-                .get(id=pk)
-            )
-
-            if workout.user != request.user:
-                return Response(
-                    {"detail": "No tienes permiso para ver esta sesión de entrenamiento."},
-                    status=403
-                )
-
-            serializer = WorkOutSessionDetailSerializer(workout)
-            return Response(serializer.data, status=200)
-
-        except WorkoutSession.DoesNotExist:
-            return Response({"detail": "Sesión no encontrada."}, status=404)
-
-        except Exception:
-            return Response({"detail": "Error interno."}, status=500)
+        session = self.service.get_session_detail(pk, request.user)
+        return Response(session, status=200)
 
 
     def create(self, request):
-        try:
-            serializer = WorkOutSessionSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-
-            data = serializer.validated_data
-
-            session = WorkoutSession.objects.create(
-                **data,
-                user=request.user
-            )
-
-            output = WorkOutSessionSerializer(session)
-
-            return Response(output.data, status=201)
-
-        except Exception as e:
-            return Response({"detail": "Error al crear la sesión."}, status=500)
-
-
+        session = self.service.create_session(request.data, request.user)
+        return Response(session, status=201)
+    
     def update(self, request, pk=None):
-        try:
-            session = WorkoutSession.objects.get(id=pk)
-
-            if session.user != request.user:
-                return Response(
-                    {"detail": "No tienes permiso para modificar esta sesión de entrenamiento."},
-                    status=403
-                )
-
-            serializer = WorkOutSessionSerializer(session, data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-
-            session.save(
-                **serializer.validated_data
-            )
-
-            return Response(serializer.data, status=200)
-
-        except WorkoutSession.DoesNotExist:
-            return Response({"detail": "Sesión no encontrada."}, status=404)
-
-        except Exception:
-            return Response({"detail": "Error al actualizar la sesión."}, status=500)
-
+        session = self.service.update_session(pk, request.data, request.user)
+        return Response(session, status=200)
+    
+    def destroy(self, request, pk=None):
+        self.service.delete_session(pk, request.user)
+        return Response(status=204)
+    
+    @action(detail=True, methods=['get', 'post'], url_path='exercises')
+    def get_exercises(self, request, pk=None):
+        if request.method == 'GET':
+            session = self.service.get_exercises_logs_by_session(pk, request.user)
+            return Response(session, status=200)
+        
+        if request.method == 'POST':
+            session = self.exercise_log_service.create_log(pk, request.data, request.user)
+            return Response(session, status=201)
+        
+    @action(detail=True, methods=['put', 'delete'], url_path='exercises/(?P<log_pk>[^/.]+)')
+    def modify_exercise_log(self, request, pk=None, log_pk=None):
+        if request.method == 'PUT':
+            log = self.exercise_log_service.update_log(log_pk, request.data, request.user, pk)
+            return Response(log, status=200)
+        
+        if request.method == 'DELETE':
+            self.exercise_log_service.delete_log(log_pk, request.user, pk)
+            return Response(status=204)
+    
+    
