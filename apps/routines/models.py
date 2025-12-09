@@ -43,12 +43,12 @@ class Workout(models.Model):
     )
 
     class Meta:
-        unique_together = ('routines', 'day_order')
+        unique_together = ('routine', 'day_order')
         # Agrega un constraint que no me permite que se registre dos días con el mismo número en la misma rutina
         ordering = ['day_order']
 
     def __str__(self):
-        return f"{self.name} - Día {self.day_order} de {self.routines.name}"
+        return f"{self.name} - Día {self.day_order} de {self.routine.name}"
 
 
 class WorkoutExercise(models.Model):

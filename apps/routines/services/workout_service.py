@@ -27,14 +27,14 @@ class WorkOutService:
         workout = self.repository.create(data)
         return WorkoutSerialzier(workout).data
 
-    def get_or_404(self, pk):
+    def get_or_not_found(self, pk):
         workout = self.repository.get_by_id(pk)
         if not workout:
             raise WorkoutNotFoundException(f"Workout with id {pk} not found.")
         return workout
 
     def update(self, pk, data, user):
-        workout = self.get_or_404(pk)
+        workout = self.get_or_not_found(pk)
 
         if workout.routine.user != user:
             raise RoutinePermissionDeniedException("You do not have permission to update this workout.")
@@ -56,7 +56,7 @@ class WorkOutService:
         return WorkOutDetailSerializer(workout).data
 
     def delete(self, pk, user):
-        workout = self.get_or_404(pk)
+        workout = self.get_or_not_found(pk)
 
         if workout.routine.user != user:
             raise RoutinePermissionDeniedException("You do not have permission to delete this workout.")

@@ -1,8 +1,7 @@
-from time import daylight
-
 from rest_framework.serializers import ModelSerializer
 from apps.routines.models import Workout, WorkoutExercise
 from rest_framework import serializers
+from apps.exercises.serializers.exercises_serializer import ExercisesSerializer
 
 
 class WorkoutSerialzier(ModelSerializer):
@@ -36,6 +35,7 @@ class WorkoutUpdateSerializer(ModelSerializer):
 
 
 class WorkoutExerciseSerializer(ModelSerializer):
+
     class Meta:
         model = WorkoutExercise
         fields = (
@@ -49,7 +49,15 @@ class WorkoutExerciseSerializer(ModelSerializer):
             'rest_time',
             'notes',
         )
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'workout', 'order')
+
+
+    def validate_notes(self, value):
+        if not value:
+            return ''
+        if len(value) > 255:
+            raise serializers.ValidationError("Las notas no pueden exceder los 255 caracteres.")
+        return value
 
     def validate_reps_min(self, value):
         if value < 1:
@@ -57,9 +65,74 @@ class WorkoutExerciseSerializer(ModelSerializer):
         return value
 
     def validate_reps_max(self, value):
-        if value < 1 and value < self.initial_data.get('reps_min', 1):
+        reps_min = self.initial_data.get('reps_min')
+
+        if value < 1:
             raise serializers.ValidationError("Las repeticiones máximas deben ser al menos 1.")
+
+        if reps_min is not None and value < int(reps_min):
+            raise serializers.ValidationError(
+                "Las repeticiones máximas no pueden ser menores que las mínimas."
+            )
+
         return value
+
+class WorkoutExerciseDetailSerializer(ModelSerializer):
+    workout = serializers.PrimaryKeyRelatedField(read_only=True)
+    exercise = ExercisesSerializer(read_only=True)
+
+    class Meta:
+        model = WorkoutExercise
+        fields = (
+            'id',
+            'workout',
+            'exercise',
+            'order',
+            'sets',
+            'reps_min',
+            'reps_max',
+            'rest_time',
+            'notes',
+        )
+        read_only_fields = ('id', 'workout', 'order')
+
+
+class WorkoutExerciseUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = WorkoutExercise
+        fields = (
+            'sets',
+            'reps_min',
+            'reps_max',
+            'rest_time',
+            'notes',
+        )
+
+    def validate_notes(self, value):
+        if not value:
+            return ''
+        if len(value) > 255:
+            raise serializers.ValidationError("Las notas no pueden exceder los 255 caracteres.")
+        return value
+
+    def validate_reps_min(self, value):
+        if value < 1:
+            raise serializers.ValidationError("Las repeticiones mínimas deben ser al menos 1.")
+        return value
+
+    def validate_reps_max(self, value):
+        reps_min = self.initial_data.get('reps_min')
+
+        if value < 1:
+            raise serializers.ValidationError("Las repeticiones máximas deben ser al menos 1.")
+
+        if reps_min is not None and value < int(reps_min):
+            raise serializers.ValidationError(
+                "Las repeticiones máximas no pueden ser menores que las mínimas."
+            )
+
+        return value
+
 
 class WorkOutDetailSerializer(ModelSerializer):
     exercises = WorkoutExerciseSerializer(many=True)

@@ -35,7 +35,7 @@ class RoutineViewSet(ViewSet):
         self.service.delete(pk=pk, user=request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=["post"], url_path="workouts")
+    @action(detail=True, methods=["get"], url_path="workouts")
     def workouts(self, request, pk=None):
         workouts = self.service.get_workout_by_routine(pk=pk, user=request.user,query_params=request.query_params)
         return Response(workouts, status=status.HTTP_200_OK)
